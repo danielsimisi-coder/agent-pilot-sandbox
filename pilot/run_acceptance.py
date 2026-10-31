@@ -5,8 +5,9 @@ import re
 import subprocess
 import tempfile
 import uuid
+import sys
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) == 2 else Path(__file__).resolve().parents[1]
 CRITERIA = '6cea33264564eed96aeabf185661e1fbdef412f3'
 IMAGE = 'node:24-bookworm-slim@sha256:c86ecead9e55a5210ac1727de38a4ca840bf03dcaf34dc9749addbf383b1920c'
 PATHS = ['pilot/criteria/PLAN.md', 'pilot/criteria/PLAN-REVIEW.md', 'pilot/criteria/acceptance.test.mjs']
@@ -37,20 +38,22 @@ with tempfile.TemporaryDirectory(prefix='slug-criteria-') as temp:
            '--tmpfs', '/tmp:rw,noexec,nosuid,size=16m', '--workdir', '/workspace']
     for source, target in [(ROOT/'src', '/workspace/src'), (ROOT/'test', '/workspace/test'), (criteria, '/criteria')]:
         cmd += ['--mount', f'type=bind,src={source},dst={target},readonly']
-    cmd += [IMAGE, 'node', '--test', '--test-isolation=none', '--test-reporter=tap',
-            '/workspace/test/acceptance.test.mjs', '/criteria/acceptance.test.mjs']
-    try:
-        run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=90)
-    except subprocess.TimeoutExpired:
-        subprocess.run(['docker', 'rm', '-f', name], capture_output=True)
-        raise RuntimeError('acceptance timeout')
-    finally:
-        if snapshot() != before:
-            raise RuntimeError('authority changed during execution')
-    print(run.stdout, end='')
-    print(run.stderr, end='')
-    # Reject early exit(0). Deliberate fabrication of full TAP is outside this proof.
-    required = [r'^# tests 18$', r'^# pass 18$', r'^# fail 0$']
-    if run.returncode or not all(re.search(p, run.stdout, re.MULTILINE) for p in required):
-        raise SystemExit('FAIL: exit status or expected acceptance count')
+    cmd += [IMAGE, 'node', '--test', '--test-isolation=none', '--test-reporter=tap']
+    # PR-controlled regression tests cannot alter the frozen test process.
+    for test_file, count in [('/criteria/acceptance.test.mjs', 4), ('/workspace/test/acceptance.test.mjs', 14)]:
+        check_cmd = cmd + [test_file]
+        try:
+            run = subprocess.run(check_cmd, cwd=ROOT, capture_output=True, text=True, timeout=90)
+        except subprocess.TimeoutExpired:
+            subprocess.run(['docker', 'rm', '-f', name], capture_output=True)
+            raise RuntimeError('acceptance timeout')
+        finally:
+            if snapshot() != before:
+                raise RuntimeError('authority changed during execution')
+        print(run.stdout, end='')
+        print(run.stderr, end='')
+        # Reject early exit(0). Deliberate fabrication of full TAP is outside this proof.
+        required = [rf'^# tests {count}$', rf'^# pass {count}$', r'^# fail 0$']
+        if run.returncode or not all(re.search(p, run.stdout, re.MULTILINE) for p in required):
+            raise SystemExit('FAIL: exit status or expected acceptance count')
 print('PASS: 18 tests; frozen criteria unchanged; read-only/no-network container')
