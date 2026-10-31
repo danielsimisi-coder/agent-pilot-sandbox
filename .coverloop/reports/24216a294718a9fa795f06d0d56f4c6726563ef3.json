@@ -1,0 +1,43 @@
+{
+  "schema": "coverloop-report/v1",
+  "commit": "24216a294718a9fa795f06d0d56f4c6726563ef3",
+  "risk_tier": "L3",
+  "created_at": "2026-10-31T07:05:55Z",
+  "tests": {
+    "command": "python3 pilot/run_acceptance.py",
+    "status": "pass",
+    "ran_at": "2026-10-31T07:05:57Z"
+  },
+  "codex": {
+    "status": "pass",
+    "findings_open": 0,
+    "recorded_at": "2026-10-31T07:08:30Z",
+    "source": "attached",
+    "output_file": ".coverloop/reports/24216a294718a9fa795f06d0d56f4c6726563ef3.codex.log",
+    "output_sha256": "9981d42b4a0ecc2d13264a7548f787fb686daf0ce7ad347092fdd2c96d7a3257",
+    "output_lines": 13,
+    "attached_at": "2026-10-31T07:08:30Z"
+  },
+  "glm": {
+    "status": "pass",
+    "findings_open": 0,
+    "recorded_at": "2026-10-31T07:05:57Z",
+    "source": "attached",
+    "output_file": ".coverloop/reports/24216a294718a9fa795f06d0d56f4c6726563ef3.glm.log",
+    "output_sha256": "480c6cd49945ef4ee8d51d32fd6e21004e2eb4bd8e175b53c70b72cfe663d0db",
+    "output_lines": 35,
+    "attached_at": "2026-10-31T07:05:57Z"
+  },
+  "mutation": {
+    "status": "pass",
+    "findings_open": 0,
+    "recorded_at": "2026-10-31T07:05:57Z",
+    "source": "attached",
+    "output_file": ".coverloop/reports/24216a294718a9fa795f06d0d56f4c6726563ef3.mutation.log",
+    "output_sha256": "cefcd5d80af16ded23e892d524947af4a5baf58e6eff1a9bcb3e3ff35a03bc5b",
+    "output_lines": 259,
+    "attached_at": "2026-10-31T07:05:57Z",
+    "guards_broken": 5
+  },
+  "human_gate": null
+}
