@@ -1,0 +1,1 @@
+{"schema":"coverloop-config/v1","test_command":"python3 pilot/run_acceptance.py"}

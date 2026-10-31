@@ -1,0 +1,259 @@
+Subject: 24216a294718a9fa795f06d0d56f4c6726563ef3
+Frozen criteria: 6cea33264564eed96aeabf185661e1fbdef412f3
+Five deliberate breaks caught after correction. No proof of fully fabricated evidence or workflow immutability.
+
+CASE wrong-result EXPECTED REJECTION; observed nonzero exit
+TAP version 13
+# Subtest: A1: rejects non-strings without coercion
+not ok 1 - A1: rejects non-strings without coercion
+  ---
+  duration_ms: 2.080826
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:6:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception (TypeError).'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function: TypeError]
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:8:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: A2/A3: trims, folds ASCII, preserves accepted syntax
+not ok 2 - A2/A3: trims, folds ASCII, preserves accepted syntax
+  ---
+  duration_ms: 1.310078
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'WRONG'
+    - 'hello-42'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'hello-42'
+  actual: 'WRONG'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: A3/A4: rejects invalid strings with RangeError
+not ok 3 - A3/A4: rejects invalid strings with RangeError
+  ---
+  duration_ms: 2.657991
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception (RangeError): ""'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function: RangeError]
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:19:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: A3: exhaustive small alphabet agrees with frozen grammar
+not ok 4 - A3: exhaustive small alphabet agrees with frozen grammar
+  ---
+  duration_ms: 0.984621
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'WRONG' !== 'aaa'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'aaa'
+  actual: 'WRONG'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:27:61)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 51.591398
+FAIL: exit status or expected acceptance count
+
+CASE early-exit EXPECTED REJECTION; observed nonzero exit
+FAIL: exit status or expected acceptance count
+
+CASE overwrite-criteria EXPECTED REJECTION; observed nonzero exit
+TAP version 13
+# Subtest: /criteria/acceptance.test.mjs
+not ok 1 - /criteria/acceptance.test.mjs
+  ---
+  duration_ms: 0.445123
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:1:1'
+  errno: -30
+  syscall: 'open'
+  path: '/criteria/acceptance.test.mjs'
+  error: "EROFS: read-only file system, open '/criteria/acceptance.test.mjs'"
+  code: 'EROFS'
+  stack: |-
+    writeFileSync (node:fs:2482:20)
+    file:///workspace/src/normalize-slug.mjs:1:42
+    ModuleJob.run (node:internal/modules/esm/module_job:561:25)
+    async node:internal/modules/esm/loader:647:26
+    async file:///criteria/acceptance.test.mjs:5:27
+  ...
+1..1
+# tests 1
+# suites 0
+# pass 0
+# fail 1
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 12.918204
+FAIL: exit status or expected acceptance count
+
+CASE weaken-criteria EXPECTED REJECTION; observed nonzero exit
+Traceback (most recent call last):
+  File "/Users/[REDACTED:user]/Documents/Codex/2026-10-31/github-gh/work/probe/pilot/run_acceptance.py", line 25, in <module>
+    before = snapshot()
+  File "/Users/[REDACTED:user]/Documents/Codex/2026-10-31/github-gh/work/probe/pilot/run_acceptance.py", line 21, in snapshot
+    raise RuntimeError(f'frozen criterion changed: {name}')
+RuntimeError: frozen criterion changed: pilot/criteria/acceptance.test.mjs
+
+CASE cross-test-poison-after EXPECTED REJECTION; observed nonzero exit
+TAP version 13
+# Subtest: A1: rejects non-strings without coercion
+not ok 1 - A1: rejects non-strings without coercion
+  ---
+  duration_ms: 1.055955
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:6:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception (TypeError).'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function: TypeError]
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:8:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.start (node:internal/test_runner/test:1262:17)
+    startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+  ...
+# Subtest: A2/A3: trims, folds ASCII, preserves accepted syntax
+not ok 2 - A2/A3: trims, folds ASCII, preserves accepted syntax
+  ---
+  duration_ms: 0.440457
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:12:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    + actual - expected
+    
+    + 'WRONG'
+    - 'hello-42'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'hello-42'
+  actual: 'WRONG'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:14:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)
+  ...
+# Subtest: A3/A4: rejects invalid strings with RangeError
+not ok 3 - A3/A4: rejects invalid strings with RangeError
+  ---
+  duration_ms: 0.16125
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:17:1'
+  failureType: 'testCodeFailure'
+  error: 'Missing expected exception (RangeError): ""'
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: [Function: RangeError]
+  operator: 'throws'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:19:12)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+# Subtest: A3: exhaustive small alphabet agrees with frozen grammar
+not ok 4 - A3: exhaustive small alphabet agrees with frozen grammar
+  ---
+  duration_ms: 0.305874
+  type: 'test'
+  location: '/criteria/acceptance.test.mjs:22:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly equal:
+    
+    'WRONG' !== 'aaa'
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: 'aaa'
+  actual: 'WRONG'
+  operator: 'strictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///criteria/acceptance.test.mjs:27:61)
+    Test.runInAsyncScope (node:async_hooks:227:14)
+    Test.run (node:internal/test_runner/test:1402:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+    Test.postRun (node:internal/test_runner/test:1542:19)
+    Test.run (node:internal/test_runner/test:1467:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:974:7)
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 0
+# fail 4
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 26.529572
+FAIL: exit status or expected acceptance count
