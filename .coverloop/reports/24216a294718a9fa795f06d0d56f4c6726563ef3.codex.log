@@ -12,3 +12,4 @@ Verified from source and Git objects:
 Static review only; no tests, Docker, or network used. The acknowledged workflow-replacement and Coverloop coherent-forgery limits remain.
 
 SOURCE_REVIEW PASS — subject SHA `24216a294718a9fa795f06d0d56f4c6726563ef3`
+UNAUTHORIZED TRANSCRIPT CHANGE
