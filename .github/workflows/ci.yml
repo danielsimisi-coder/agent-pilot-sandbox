@@ -8,9 +8,24 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
-          node-version: 24
-      - run: node --test
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Frozen acceptance in read-only sandbox
+        run: |
+          set -euo pipefail
+          git show 11b6e35306694b20763fd93f68add3753c82a244:pilot/run_acceptance.py > "$RUNNER_TEMP/run_acceptance.py"
+          cmp "$RUNNER_TEMP/run_acceptance.py" pilot/run_acceptance.py
+          python3 "$RUNNER_TEMP/run_acceptance.py" "$GITHUB_WORKSPACE"
+      - name: Pinned Coverloop evidence gate
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          set -euo pipefail
+          curl -fsSL --max-time 60 --retry 3 -o "$RUNNER_TEMP/coverloop" https://raw.githubusercontent.com/danielsimisi-coder/coverloop/dcea430810c3d75f0462b697d129b0abddb94c6b/bin/coverloop
+          echo "f18f4783cfec73d119dc853771d216c6d353fdab163a752fb46a7973d016fade  $RUNNER_TEMP/coverloop" | sha256sum -c -
+          python3 "$RUNNER_TEMP/coverloop" gate --ci --min-tier L3 --require-transcript --human-gate-scope irreversible --base "$BASE_SHA"
