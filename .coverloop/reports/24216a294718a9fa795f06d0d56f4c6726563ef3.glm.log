@@ -1,0 +1,35 @@
+## 1. Verdict: PASS
+
+No remaining P0 or P1 found in the provided diff. Both prior P1s are concretely fixed.
+
+## 2. P0 blockers
+None.
+
+## 3. P1 serious issues
+None.
+
+**Verification of the two prior P1 fixes:**
+
+- **Cross-test pollution (fixed):** `pilot/run_acceptance.py:44-46` — each test file runs in its own `docker run` invocation (fresh container, fresh Node process per run). Frozen criteria (`/criteria/acceptance.test.mjs`) and PR tests (`/workspace/test/acceptance.test.mjs`) never share a process. `--rm` plus unique `--name` per script invocation prevents container reuse. The frozen test file itself is materialized from immutable commit `6cea332` into a host-side temp dir (`run_acceptance.py:31-34`), not from the PR-controlled workspace.
+- **Runner mutability (fixed):** `ci.yml` — the executed runner is extracted via `git show 11b6e35...:pilot/run_acceptance.py` into `$RUNNER_TEMP` and *that* copy is executed; `cmp` against the workspace copy fails closed if the PR touched the runner. PR code executes only inside the locked-down container (`--network none`, `--read-only`, `--cap-drop ALL`, `no-new-privileges`, uid 65534, read-only bind mounts). No PR-controlled code runs on the host. Coverloop binary is SHA-pinned + sha256-verified.
+
+## 4. P2 improvements (non-blocking)
+- `run_acceptance.py:48-53` — on timeout, the `finally` snapshot check can mask the `RuntimeError('acceptance timeout')` with `'authority changed during execution'` if both conditions coincide. Cosmetic error-precedence issue; both paths fail closed.
+- `ci.yml` — `BASE_SHA` falls back to `github.event.before`, which is all-zeros on newly pushed branches; Coverloop gate will fail closed but with a confusing cause.
+- `ci.yml` — for fork PRs, `git show 11b6e35...` / `6cea332...` may fail if those objects aren't in the fork's fetched history. Fail-closed, but a false-failure source for legitimate fork contributions.
+- `run_acceptance.py:40` — bind-mount string interpolation breaks if `GITHUB_WORKSPACE` contains a comma. Not realistic on GitHub-hosted runners.
+- `src/normalize-slug.mjs:17` — missing trailing newline.
+- Sequential container runs reuse the same `--name`; a slow daemon-side removal of run 1 could cause a spurious name-conflict failure on run 2. Fail-closed, rare.
+
+## 5. Missing tests / verification
+- Contents of the frozen `acceptance.test.mjs` (4 tests) and PR `test/acceptance.test.mjs` (14 tests) are not in the diff — cannot verify they meaningfully exercise `normalizeSlug` (edge cases: length 1/32 boundaries, consecutive/leading/trailing hyphens, non-string input, uppercase/whitespace normalization).
+- No in-diff negative proof that tampering with frozen criteria or the runner actually fails CI (stated as recorded separately — acceptable per task scope).
+- Docker image digest correctness/currency not verifiable from source alone.
+
+## 6. Likely false positives / what to ignore
+- **TAP summary forgery by PR-controlled code** (e.g., `src` printing fake `# tests 4` lines + early `process.exit(0)`): real, but explicitly acknowledged in-code (`run_acceptance.py:55`) and in the task as a measured limitation. Do not re-flag.
+- **Workflow replacement** and **Coverloop v1 coherent forgery**: explicitly scoped-out limitations.
+- PR tests being PR-authored (self-attesting 14 tests): inherent to the design; the frozen 4 tests are the actual gate.
+
+## 7. Suggested next action
+Accept. Hand to Codex/GPT-5.5 xhigh for final gate with the runtime proof artifacts (container isolation evidence, tamper-failure recordings) cross-referenced against the limitations register to confirm the three acknowledged limitations remain accurately labeled as measured, not claimed-secure.
