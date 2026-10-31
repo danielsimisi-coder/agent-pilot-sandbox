@@ -1,0 +1,15 @@
+P0/P1: None found.
+
+P2: [pilot/run_acceptance.py:46](/Users/[REDACTED:user]/Documents/Codex/2026-10-31/github-gh/work/pilot/pilot/run_acceptance.py:46) — `capture_output=True` buffers unlimited stdout/stderr in the host Python process. A noisy candidate can exhaust runner memory despite the container’s memory cap. Bound captured output and terminate the container on overflow.
+
+Verified from source and Git objects:
+
+- Frozen 4 tests and 14 regression tests run in separate Docker invocations.
+- CI extracts the runner from its pinned SHA, checks it with `cmp`, and executes that copy.
+- Criteria remain identical to frozen commit `6cea33264564eed96aeabf185661e1fbdef412f3`.
+- `normalizeSlug` implements the frozen requirements; existing segment source/tests are unchanged.
+
+Static review only; no tests, Docker, or network used. The acknowledged workflow-replacement and Coverloop coherent-forgery limits remain.
+
+SOURCE_REVIEW PASS — subject SHA `24216a294718a9fa795f06d0d56f4c6726563ef3`
+UNAUTHORIZED TRANSCRIPT CHANGE
