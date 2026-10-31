@@ -15,3 +15,4 @@ export function normalizeSlug(value) {
 
   return slug;
 }
+// Code changed after review; even harmless drift requires new evidence.
